@@ -40,7 +40,7 @@
                                                     class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-600 focus:bg-teal-500 hover:bg-teal-500 text-xs w-6 h-6 flex items-center justify-center font-medium text-white bg-teal-600 rounded-full">{{ $dayCounter }}</a>
                                             </div>
                                         </div>
-                                    @elseif ($sD === $dayCounter && $sM === $changeMonth && $sY === $changeYear)
+                                    @elseif ($selectedDay === $dayCounter && $selectedMonth === $changeMonth && $selectedYear === $changeYear)
                                         <div class="w-full h-full">
                                             <div
                                                 class="flex items-center justify-center w-full rounded-full cursor-pointer">

@@ -5,11 +5,12 @@ namespace App\Livewire\Calendar;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.calendar-layout')]
+#[Layout('livewire.layouts.calendar-layout')]
 class Calendar extends Component
 {
     public function render()
     {
-        return view('livewire.calendar.calendar');
+        $view = session()->get('view-calendar', 'month-calendar');
+        return view("livewire.calendar.$view");
     }
 }
