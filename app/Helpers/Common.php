@@ -9,9 +9,16 @@ class Common
         $user = auth()->user();
 
         if ($user && $user->avatar) {
-            return asset('storage/avatars/' . $user->avatar);
+            return asset('assets/images/avatars/users/' . $user->avatar);
         } else {
-            return asset('storage/avatars/default.png');
+            $rand = rand(1, 100);
+            return asset("assets/images/avatars/default/$rand.png");
         }
+    }
+
+    public static function errorAvatar()
+    {
+        $rand = rand(1, 100);
+        return asset("assets/images/avatars/default/$rand.png");
     }
 }
