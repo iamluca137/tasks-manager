@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.red-rose {
+    font-family: "Red Rose", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}

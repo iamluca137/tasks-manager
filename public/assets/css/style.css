@@ -1,0 +1,27 @@
+html {
+    scroll-behavior: smooth;
+    background-color: #e7e9ea;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-small::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+.scrollbar-small::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+.scrollbar-small::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+}
