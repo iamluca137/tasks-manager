@@ -22,37 +22,19 @@
                 <span class="self-center text-2xl font-semibold whitespace-nowrap ">Tasks
                     Manager</span>
             </a>
-            <div class="flex md:ml-10 items-center justify-between gap-3">
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-6">
-                        <button wire:click="gotoToday"
-                            class="flex py-2 pl-1.5 pr-3 rounded-md bg-gray-50 border border-gray-300 items-center gap-1.5 text-xs font-medium text-gray-900 transition-all duration-500 hover:bg-gray-100">
-                            <i class="fa-solid fa-calendar-days text-gray-500"></i>Today
-                        </button>
-                        <button wire:click.debounce.0ms="previousMonth"
-                            class="text-gray-500 rounded flex items-center transition-all duration-300 hover:bg-gray-100 hover:text-gray-900">
-                            <i class="fa-solid fa-chevron-left fa-xs text-gray-500 hover:text-gray-400"></i>
-                        </button>
-                        <button wire:click.debounce.0ms="nextMonth"
-                            class="text-gray-500 rounded flex items-center transition-all duration-300 hover:bg-gray-100 hover:text-gray-900">
-                            <i class="fa-solid fa-chevron-right fa-xs text-gray-500 hover:text-gray-400"></i>
-                        </button>
-                    </div>
-                    <h5 class="text-xl leading-8 font-semibold text-gray-900">{{ $nameOfMonth }}</h5>
-                </div>
-            </div>
+            @livewire('calendar.overview-calendar-header')
         </div>
         <div class="flex items-center lg:order-2">
             <div>
                 <button
                     class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-800 hover:text-gray-900 rounded-md bg-gray-50 border border-gray-300 transition-all duration-500 hover:bg-gray-100"
-                    type="button" data-dropdown-toggle="weekly-sales-dropdown">Month<svg class="w-4 h-4 ml-2"
+                    type="button" data-dropdown-toggle="viewModeCalendar">Month<svg class="w-4 h-4 ml-2"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg></button>
                 <!-- Dropdown menu -->
                 <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow  "
-                    id="weekly-sales-dropdown"
+                    id="viewModeCalendar"
                     style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(355.556px, 706.667px);"
                     data-popper-placement="bottom">
                     <ul class="py-1" role="none">
@@ -65,7 +47,7 @@
                     </ul>
                     <ul class="py-1" role="none">
                         <li>
-                            <button id="doubleDropdownButton" data-dropdown-toggle="doubleDropdown"
+                            <button id="otherViewModeCalendarButton" data-dropdown-toggle="otherViewModeCalendar"
                                 data-dropdown-placement="right-start" type="button"
                                 class="flex items-center justify-between px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm">Number
                                 of days<svg class="w-2.5 h-2.5 ms-3 rtl:rotate-180" aria-hidden="true"
@@ -73,9 +55,9 @@
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                         stroke-width="2" d="m1 9 4-4-4-4" />
                                 </svg></button>
-                            <div id="doubleDropdown"
+                            <div id="otherViewModeCalendar"
                                 class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44">
-                                <ul class="py-2 text-sm text-gray-700" aria-labelledby="doubleDropdownButton">
+                                <ul class="py-2 text-sm text-gray-700" aria-labelledby="otherViewModeCalendarButton">
                                     @foreach ($fixedDayCounts as $day)
                                         <li>
                                             <a href="#"
@@ -84,7 +66,7 @@
                                         </li>
                                     @endforeach
                                 </ul>
-                                <ul class="py-2 text-sm text-gray-700" aria-labelledby="doubleDropdownButton">
+                                <ul class="py-2 text-sm text-gray-700" aria-labelledby="otherViewModeCalendarButton">
                                     <li>
                                         <a href="#"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"

@@ -4,56 +4,73 @@ namespace App\Livewire\Calendar;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
 class MiniCalendar extends Component
 {
-    public $weekDays = ['M', 'T', 'W', 'T', 'F', 'S', 'S']; // week days
-    public $nameOfMonth; // name of month
-    public $currentDay, $currentMonth, $currentYear; // current day, month, year
-    public $changeMonth, $changeYear; // month and year to display
-    public $daysInMonth, $firstDayOfMonth; // number of days in month, first day of month
-    #[Url]
-    public $selectedDay, $selectedMonth, $selectedYear = null; // selected day, month, year
-
-    protected $listeners = ['dateUpdated' => 'calculateMonthData'];
+    public $weekDays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+    public $nameOfMonth;
+    public $currentDay, $currentMonth, $currentYear;
+    public $changeMonth, $changeYear;
+    public $daysInMonth, $firstDayOfMonth;
+    // #[Url]
+    public $selectedDay, $selectedMonth, $selectedYear;
 
     public function mount()
     {
         $now = Carbon::now();
+        $this->setCurrentDate($now);
+        $this->loadSelectedDateFromUrl();
+        $this->loadStateFromSession();
+        $this->calculateMonthData();
+    }
+
+    private function setCurrentDate(Carbon $now)
+    {
         $this->currentDay = $now->day;
         $this->currentMonth = $now->month;
         $this->currentYear = $now->year;
+    }
 
-        $savedData = Session::get('selected_date');
+    private function loadSelectedDateFromUrl()
+    {
+        $segments = request()->segments();
+
+        $this->selectedYear = (int) ($segments[0] ?? now()->year);
+        $this->selectedMonth = (int) ($segments[1] ?? now()->month);
+        $this->selectedDay = (int) ($segments[2] ?? now()->day);
+    }
+
+    private function loadStateFromSession()
+    {
+        $savedData = Session::get('calendar_data', []);
+        $this->changeMonth = $savedData['changeMonth'] ?? $this->currentMonth;
+        $this->changeYear = $savedData['changeYear'] ?? $this->currentYear;
+    }
+
+    #[On('dateUpdated')]
+    public function updateDate()
+    {
+        $savedData = Session::get('calendar_data');
 
         if ($savedData) {
-            $this->selectedDay = $savedData['selectedDay'];
-            $this->selectedMonth = $savedData['selectedMonth'];
-            $this->selectedYear = $savedData['selectedYear'];
             $this->changeMonth = $savedData['changeMonth'];
             $this->changeYear = $savedData['changeYear'];
-        } else {
-            $this->changeMonth = $this->currentMonth;
-            $this->changeYear = $this->currentYear;
+            $this->nameOfMonth = $savedData['nameOfMonth'];
         }
-
-        $this->calculateMonthData();
     }
 
     private function saveToSession()
     {
         Session::put('calendar_data', [
-            'selectedDay' => $this->selectedDay,
-            'selectedMonth' => $this->selectedMonth,
-            'selectedYear' => $this->selectedYear,
             'changeMonth' => $this->changeMonth,
-            'changeYear' => $this->changeYear
+            'changeYear' => $this->changeYear,
+            'nameOfMonth' => $this->nameOfMonth,
         ]);
     }
 
-    // calculate number of days in month, first day of month, name of month
     public function calculateMonthData()
     {
         $date = Carbon::create($this->changeYear, $this->changeMonth, 1);
@@ -65,29 +82,31 @@ class MiniCalendar extends Component
         $this->dispatch('dateUpdated');
     }
 
-    // go to previous month
-    public function previousMonth()
+    public function changeMonth($direction)
     {
-        $this->changeMonth--;
+        $this->changeMonth += $direction;
+
         if ($this->changeMonth < 1) {
             $this->changeMonth = 12;
             $this->changeYear--;
-        }
-        $this->calculateMonthData();
-    }
-
-    // go to next month
-    public function nextMonth()
-    {
-        $this->changeMonth++;
-        if ($this->changeMonth > 12) {
+        } elseif ($this->changeMonth > 12) {
             $this->changeMonth = 1;
             $this->changeYear++;
         }
+
         $this->calculateMonthData();
     }
 
-    // select date
+    public function previousMonth()
+    {
+        $this->changeMonth(-1);
+    }
+
+    public function nextMonth()
+    {
+        $this->changeMonth(1);
+    }
+
     public function selectDate($selectDay)
     {
         $this->selectedDay = $selectDay;
@@ -95,18 +114,9 @@ class MiniCalendar extends Component
         $this->selectedYear = $this->changeYear;
 
         $this->saveToSession();
-    }
 
-    public function clearSelectedDate()
-    {
-        Session::forget('calendar_data');
-        $this->selectedDay = null;
-        $this->selectedMonth = $this->currentMonth;
-        $this->selectedYear = $this->currentYear;
-        $this->changeMonth = $this->currentMonth;
-        $this->changeYear = $this->currentYear;
-
-        $this->calculateMonthData();
+        $newUrl = url("{$this->selectedYear}/{$this->selectedMonth}/{$this->selectedDay}");
+        $this->dispatch('update-url', ['url' => $newUrl]);
     }
 
     public function render()

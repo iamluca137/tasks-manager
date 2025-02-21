@@ -13,4 +13,6 @@ Route::get('/reset-password', Login::class)->name('password.reset');
 Route::get('/signout', [Login::class, 'signout'])->name('signout');
 
 // Calendar
-Route::get('/', Calendar::class)->name('calendar')->middleware('auth');
+Route::get('/{year?}/{month?}/{day?}', Calendar::class)
+    ->name('calendar')
+    ->middleware('auth');

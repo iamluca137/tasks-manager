@@ -33,7 +33,8 @@
                                     <div class="p-1 cursor-pointer flex w-full justify-center"></div>
                                 @else
                                     @if ($currentDay === $dayCounter && $currentMonth === $changeMonth && $currentYear === $changeYear)
-                                        <div class="w-full h-full">
+                                        <div class="w-full h-full"
+                                            wire:click.debounce.0ms="selectDate({{ $dayCounter }})">
                                             <div
                                                 class="flex items-center justify-center w-full rounded-full cursor-pointer">
                                                 <a role="link" tabindex="0"
@@ -41,7 +42,8 @@
                                             </div>
                                         </div>
                                     @elseif ($selectedDay === $dayCounter && $selectedMonth === $changeMonth && $selectedYear === $changeYear)
-                                        <div class="w-full h-full">
+                                        <div class="w-full h-full"
+                                            wire:click.debounce.0ms="selectDate({{ $dayCounter }})">
                                             <div
                                                 class="flex items-center justify-center w-full rounded-full cursor-pointer">
                                                 <a role="link" tabindex="0"
@@ -49,10 +51,9 @@
                                             </div>
                                         </div>
                                     @else
-                                        <div
+                                        <div wire:click.debounce.0ms="selectDate({{ $dayCounter }})"
                                             class="p-1 cursor-pointer flex w-full justify-center hover:bg-gray-200 hover:rounded-full hover:text-teal-600 text-gray-500">
-                                            <p wire:click.debounce.0ms="selectDate({{ $dayCounter }})"
-                                                class="text-xs dark:text-gray-100 font-medium">
+                                            <p class="text-xs dark:text-gray-100 font-medium">
                                                 {{ $dayCounter }}</p>
                                         </div>
                                     @endif
@@ -66,3 +67,11 @@
         </table>
     </div>
 </div>
+@script
+    <script>
+        $wire.on('update-url', (event) => {
+            const newUrl = event[0].url;
+            window.history.pushState({}, '', newUrl);
+        });
+    </script>
+@endscript
