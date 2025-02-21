@@ -13,11 +13,18 @@
             <div class="bg-gray-200 text-xs leading-6 text-gray-700 flex-auto h-screen">
                 <div class="w-full grid grid-cols-7 grid-rows-6 gap-px h-full">
                     @php $dayCounter = 1; @endphp
+                    @php $nextMonthDayCounter = 1; @endphp
                     @for ($row = 0; $row < 6; $row++)
                         @for ($col = 0; $col < 7; $col++)
-                            @if (($row === 0 && $col < $firstDayOfMonth) || $dayCounter > $daysInMonth)
+                            @if ($row === 0 && $col < $firstDayOfMonth)
+                                {{-- Ngày từ tháng trước --}}
                                 <div class="relative bg-gray-50 px-3 py-2 text-gray-500">
-                                    <time datetime="2021-12-28">...</time>
+                                    <time>{{ $daysFromPreviousMonth++ }}</time>
+                                </div>
+                            @elseif ($dayCounter > $daysInMonth)
+                                {{-- Ngày từ tháng sau --}}
+                                <div class="relative bg-gray-50 px-3 py-2 text-gray-500">
+                                    <time>{{ $nextMonthDayCounter++ }}</time>
                                 </div>
                             @else
                                 @if ($currentDay === $dayCounter && $currentMonth === $changeMonth && $currentYear === $changeYear)

@@ -14,10 +14,10 @@ class MiniCalendar extends Component
     public $nameOfMonth;
     public $currentDay, $currentMonth, $currentYear;
     public $changeMonth, $changeYear;
-    public $daysInMonth, $firstDayOfMonth; 
+    public $daysInMonth, $firstDayOfMonth;
     public $selectedDay, $selectedMonth, $selectedYear;
 
-    public function mount()
+    public function mount(): void
     {
         $now = Carbon::now();
         $this->setCurrentDate($now);

@@ -11,12 +11,24 @@ use Livewire\Component;
 #[Layout('livewire.layouts.calendar-layout')]
 class MonthCalendar extends Component
 {
+    public $days = [
+        ['short' => 'M', 'full' => 'on'],
+        ['short' => 'T', 'full' => 'ue'],
+        ['short' => 'W', 'full' => 'ed'],
+        ['short' => 'T', 'full' => 'hu'],
+        ['short' => 'F', 'full' => 'ri'],
+        ['short' => 'S', 'full' => 'at'],
+        ['short' => 'S', 'full' => 'un'],
+    ];
     public $nameOfMonth;
     public $currentDay, $currentMonth, $currentYear;
     public $changeMonth, $changeYear;
     public $daysInMonth, $firstDayOfMonth;
     public $selectedDay, $selectedMonth, $selectedYear;
 
+    public $daysFromPreviousMonth, $daysFromNextMonth;
+
+    #[On('dateUpdated')]
     public function mount()
     {
         $now = Carbon::now();
@@ -25,14 +37,14 @@ class MonthCalendar extends Component
         $this->calculateMonthData();
     }
 
-    private function setCurrentDate(Carbon $now)
+    private function setCurrentDate(Carbon $now): void
     {
         $this->currentDay = $now->day;
         $this->currentMonth = $now->month;
         $this->currentYear = $now->year;
     }
 
-    private function loadSelectedDateFromUrl()
+    private function loadSelectedDateFromUrl(): void
     {
         $segments = request()->segments();
 
@@ -41,88 +53,27 @@ class MonthCalendar extends Component
         $this->selectedDay = (int) ($segments[2] ?? now()->day);
     }
 
-    #[On('dateUpdated')]
-    public function updateDate()
-    {
-        $savedData = Session::get('calendar_data');
-
-        if ($savedData) {
-            $this->changeMonth = $savedData['changeMonth'];
-            $this->changeYear = $savedData['changeYear'];
-            $this->nameOfMonth = $savedData['nameOfMonth'];
-        }
-    }
-
-    private function saveToSession()
-    {
-        Session::put('calendar_data', [
-            'changeMonth' => $this->changeMonth,
-            'changeYear' => $this->changeYear,
-            'nameOfMonth' => $this->nameOfMonth,
-        ]);
-    }
-
-    public function calculateMonthData()
+    public function calculateMonthData(): void
     {
         $date = Carbon::create($this->changeYear, $this->changeMonth, 1);
         $this->daysInMonth = $date->daysInMonth;
         $this->firstDayOfMonth = $date->dayOfWeek;
         $this->nameOfMonth = $date->format('F Y');
 
-        $this->saveToSession();
+        // Tính toán ngày từ tháng trước
+        $previousMonth = $date->copy()->subMonth();
+        $daysInPreviousMonth = $previousMonth->daysInMonth;
+        $this->daysFromPreviousMonth = $daysInPreviousMonth - $this->firstDayOfMonth + 1;
+
+        // Tính toán ngày từ tháng sau
+        $totalDisplayedDays = $this->firstDayOfMonth + $this->daysInMonth;
+        $this->daysFromNextMonth = (7 * 6) - $totalDisplayedDays; // 6 tuần đủ 42 ô
+
         $this->dispatch('dateUpdated');
-    }
-
-    public function changeMonth($direction)
-    {
-        $this->changeMonth += $direction;
-
-        if ($this->changeMonth < 1) {
-            $this->changeMonth = 12;
-            $this->changeYear--;
-        } elseif ($this->changeMonth > 12) {
-            $this->changeMonth = 1;
-            $this->changeYear++;
-        }
-
-        $this->calculateMonthData();
-    }
-
-    public function previousMonth()
-    {
-        $this->changeMonth(-1);
-    }
-
-    public function nextMonth()
-    {
-        $this->changeMonth(1);
-    }
-
-    public function selectDate($selectDay)
-    {
-        $this->selectedDay = $selectDay;
-        $this->selectedMonth = $this->changeMonth;
-        $this->selectedYear = $this->changeYear;
-
-        $this->saveToSession();
-
-        $newUrl = url("{$this->selectedYear}/{$this->selectedMonth}/{$this->selectedDay}");
-        // $this->dispatch('update-url', ['url' => $newUrl]);
     }
 
     public function render()
     {
-        $days = [
-            ['short' => 'M', 'full' => 'on'],
-            ['short' => 'T', 'full' => 'ue'],
-            ['short' => 'W', 'full' => 'ed'],
-            ['short' => 'T', 'full' => 'hu'],
-            ['short' => 'F', 'full' => 'ri'],
-            ['short' => 'S', 'full' => 'at'],
-            ['short' => 'S', 'full' => 'un'],
-        ];
-        return view('livewire.calendar.month-calendar', [
-            'days' => $days,
-        ]);
+        return view('livewire.calendar.month-calendar');
     }
 }
