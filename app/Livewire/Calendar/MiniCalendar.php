@@ -14,8 +14,7 @@ class MiniCalendar extends Component
     public $nameOfMonth;
     public $currentDay, $currentMonth, $currentYear;
     public $changeMonth, $changeYear;
-    public $daysInMonth, $firstDayOfMonth;
-    // #[Url]
+    public $daysInMonth, $firstDayOfMonth; 
     public $selectedDay, $selectedMonth, $selectedYear;
 
     public function mount()
@@ -23,7 +22,6 @@ class MiniCalendar extends Component
         $now = Carbon::now();
         $this->setCurrentDate($now);
         $this->loadSelectedDateFromUrl();
-        $this->loadStateFromSession();
         $this->calculateMonthData();
     }
 
@@ -38,16 +36,9 @@ class MiniCalendar extends Component
     {
         $segments = request()->segments();
 
-        $this->selectedYear = (int) ($segments[0] ?? now()->year);
-        $this->selectedMonth = (int) ($segments[1] ?? now()->month);
+        $this->selectedYear = $this->changeYear = (int) ($segments[0] ?? now()->year);
+        $this->selectedMonth = $this->changeMonth = (int) ($segments[1] ?? now()->month);
         $this->selectedDay = (int) ($segments[2] ?? now()->day);
-    }
-
-    private function loadStateFromSession()
-    {
-        $savedData = Session::get('calendar_data', []);
-        $this->changeMonth = $savedData['changeMonth'] ?? $this->currentMonth;
-        $this->changeYear = $savedData['changeYear'] ?? $this->currentYear;
     }
 
     #[On('dateUpdated')]

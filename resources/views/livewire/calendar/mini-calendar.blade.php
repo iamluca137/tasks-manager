@@ -75,3 +75,43 @@
         });
     </script>
 @endscript
+{{-- <div class="relative bg-white px-3 py-2">
+                        <time datetime="2022-01-22">22</time>
+                        <ol class="mt-2">
+                            <li>
+                                <a href="#" class="group flex">
+                                    <p class="flex-auto truncate font-medium text-gray-900 group-hover:text-indigo-600">
+                                        Maple syrup museum</p>
+                                    <time datetime="2022-01-22T15:00"
+                                        class="ml-3 hidden flex-none text-gray-500 group-hover:text-indigo-600 xl:block">3PM</time>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="group flex">
+                                    <p class="flex-auto truncate font-medium text-gray-900 group-hover:text-indigo-600">
+                                        Hockey game</p>
+                                    <time datetime="2022-01-22T19:00"
+                                        class="ml-3 hidden flex-none text-gray-500 group-hover:text-indigo-600 xl:block">7PM</time>
+                                </a>
+                            </li>
+                        </ol>
+                    </div> --}}
+
+{{-- <button type="button"
+                        class="flex h-14 flex-col bg-white px-3 py-2 font-semibold text-white hover:bg-gray-100 focus:z-10">
+                        <time datetime="2022-01-22"
+                            class="ml-auto flex h-6 w-6 items-center justify-center rounded-full bg-gray-900">22</time>
+                        <span class="sr-only">2 events</span>
+                        <span class="-mx-0.5 mt-auto flex flex-wrap-reverse">
+                            <span class="mx-0.5 mb-1 h-1.5 w-1.5 rounded-full bg-gray-400"></span>
+                            <span class="mx-0.5 mb-1 h-1.5 w-1.5 rounded-full bg-gray-400"></span>
+                        </span>
+                    </button> 
+                    <button type="button"
+                        class="flex h-14 flex-col bg-gray-50 px-3 py-2 text-gray-500 hover:bg-gray-100 focus:z-10">
+                        <time datetime="2022-02-04" class="ml-auto">4</time>
+                        <span class="sr-only">1 event</span>
+                        <span class="-mx-0.5 mt-auto flex flex-wrap-reverse">
+                            <span class="mx-0.5 mb-1 h-1.5 w-1.5 rounded-full bg-gray-400"></span>
+                        </span>
+                    </button>  --}}

@@ -2,15 +2,14 @@
 
 namespace App\Livewire\Calendar;
 
-use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Livewire\Livewire;
 
-#[Layout('livewire.layouts.calendar-layout')]
 class Calendar extends Component
 {
     public function render()
     {
         $view = session()->get('view-calendar', 'month-calendar');
-        return view("livewire.calendar.$view");
+        return Livewire::mount("calendar.$view");
     }
 }
