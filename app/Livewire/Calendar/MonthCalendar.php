@@ -2,15 +2,16 @@
 
 namespace App\Livewire\Calendar;
 
+use App\Livewire\Traits\HandlesCalendar;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('livewire.layouts.calendar-layout')]
 class MonthCalendar extends Component
 {
+    use HandlesCalendar;
+
     public $days = [
         ['short' => 'M', 'full' => 'on'],
         ['short' => 'T', 'full' => 'ue'],
@@ -20,37 +21,23 @@ class MonthCalendar extends Component
         ['short' => 'S', 'full' => 'at'],
         ['short' => 'S', 'full' => 'un'],
     ];
-    public $nameOfMonth;
-    public $currentDay, $currentMonth, $currentYear;
-    public $changeMonth, $changeYear;
-    public $daysInMonth, $firstDayOfMonth;
-    public $selectedDay, $selectedMonth, $selectedYear;
 
     public $daysFromPreviousMonth, $daysFromNextMonth;
 
-    #[On('dateUpdated')]
-    public function mount()
+    public function mount(): void
     {
-        $now = Carbon::now();
-        $this->setCurrentDate($now);
-        $this->loadSelectedDateFromUrl();
+        $this->initializeCalendar();
         $this->calculateMonthData();
     }
 
-    private function setCurrentDate(Carbon $now): void
+    #[On('calendarUpdated')]
+    public function updateDate($data): void
     {
-        $this->currentDay = $now->day;
-        $this->currentMonth = $now->month;
-        $this->currentYear = $now->year;
-    }
+        $this->changeMonth = $data['changeMonth'];
+        $this->changeYear = $data['changeYear'];
+        $this->nameOfMonth = $data['nameOfMonth'];
 
-    private function loadSelectedDateFromUrl(): void
-    {
-        $segments = request()->segments();
-
-        $this->selectedYear = $this->changeYear = (int) ($segments[0] ?? now()->year);
-        $this->selectedMonth = $this->changeMonth = (int) ($segments[1] ?? now()->month);
-        $this->selectedDay = (int) ($segments[2] ?? now()->day);
+        $this->calculateMonthData();
     }
 
     public function calculateMonthData(): void
@@ -60,16 +47,46 @@ class MonthCalendar extends Component
         $this->firstDayOfMonth = $date->dayOfWeek;
         $this->nameOfMonth = $date->format('F Y');
 
-        // Tính toán ngày từ tháng trước
         $previousMonth = $date->copy()->subMonth();
         $daysInPreviousMonth = $previousMonth->daysInMonth;
         $this->daysFromPreviousMonth = $daysInPreviousMonth - $this->firstDayOfMonth + 1;
 
-        // Tính toán ngày từ tháng sau
         $totalDisplayedDays = $this->firstDayOfMonth + $this->daysInMonth;
         $this->daysFromNextMonth = (7 * 6) - $totalDisplayedDays; // 6 tuần đủ 42 ô
 
         $this->dispatch('dateUpdated');
+    }
+
+    public function changeMonth($direction): void
+    {
+        $this->changeMonth += $direction;
+
+        if ($this->changeMonth < 1) {
+            $this->changeMonth = 12;
+            $this->changeYear--;
+        } elseif ($this->changeMonth > 12) {
+            $this->changeMonth = 1;
+            $this->changeYear++;
+        }
+
+        $this->calculateMonthData();
+        $this->dispatch('monthCalendarUpdated', [
+            'changeMonth' => $this->changeMonth,
+            'changeYear' => $this->changeYear,
+            'nameOfMonth' => $this->nameOfMonth,
+        ]);
+    }
+
+    #[On('previousMonth')]
+    public function previousMonth(): void
+    {
+        $this->changeMonth(-1);
+    }
+
+    #[On('nextMonth')]
+    public function nextMonth(): void
+    {
+        $this->changeMonth(1);
     }
 
     public function render()

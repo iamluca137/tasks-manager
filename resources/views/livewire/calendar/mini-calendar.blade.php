@@ -1,14 +1,14 @@
-<div class="dark:bg-gray-800 my-2 hidden md:block">
+<div class=" my-2 hidden md:block">
     <div class="ps-2 flex items-center justify-between">
         <span tabindex="0"
-            class="focus:outline-none text-base font-bold dark:text-gray-100 text-gray-800">{{ $nameOfMonth }}</span>
+            class="focus:outline-none text-base font-bold  text-gray-800">{{ $nameOfMonth }}</span>
         <div class="flex items-center gap-2 justify-between">
             <button aria-label="calendar backward" wire:click.debounce.0ms="previousMonth"
-                class="focus:text-gray-400 flex justify-center items-center hover:text-gray-300 text-gray-800 dark:text-gray-100 w-6">
+                class="focus:text-gray-400 flex justify-center items-center hover:text-gray-300 text-gray-800  w-6">
                 <i class="fa-solid fa-chevron-left fa-xs text-gray-500 hover:text-gray-300"></i>
             </button>
             <button aria-label="calendar forward" wire:click.debounce.0ms="nextMonth"
-                class="focus:text-gray-400 flex justify-center items-center hover:text-gray-300 text-gray-800 dark:text-gray-100 w-6">
+                class="focus:text-gray-400 flex justify-center items-center hover:text-gray-300 text-gray-800  w-6">
                 <i class="fa-solid fa-chevron-right fa-xs text-gray-500 hover:text-gray-300"></i>
             </button>
         </div>
@@ -18,7 +18,7 @@
             <thead>
                 <tr>
                     @foreach ($weekDays as $day)
-                        <th class="text-xs font-medium text-center text-gray-800 dark:text-gray-100">{{ $day }}
+                        <th class="text-xs font-medium text-center text-gray-800 ">{{ $day }}
                         </th>
                     @endforeach
                 </tr>
@@ -53,7 +53,7 @@
                                     @else
                                         <div wire:click.debounce.0ms="selectDate({{ $dayCounter }})"
                                             class="p-1 cursor-pointer flex w-full justify-center hover:bg-gray-200 hover:rounded-full hover:text-teal-600 text-gray-500">
-                                            <p class="text-xs dark:text-gray-100 font-medium">
+                                            <p class="text-xs  font-medium">
                                                 {{ $dayCounter }}</p>
                                         </div>
                                     @endif
@@ -106,7 +106,7 @@
                             <span class="mx-0.5 mb-1 h-1.5 w-1.5 rounded-full bg-gray-400"></span>
                             <span class="mx-0.5 mb-1 h-1.5 w-1.5 rounded-full bg-gray-400"></span>
                         </span>
-                    </button> 
+                    </button>
                     <button type="button"
                         class="flex h-14 flex-col bg-gray-50 px-3 py-2 text-gray-500 hover:bg-gray-100 focus:z-10">
                         <time datetime="2022-02-04" class="ml-auto">4</time>

@@ -35,7 +35,7 @@
                 <!-- Dropdown menu -->
                 <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow  "
                     id="viewModeCalendar"
-                    style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(355.556px, 706.667px);"
+                    style="position: absolute; inset: 0 auto auto 0; margin: 0; transform: translate(355.556px, 706.667px);"
                     data-popper-placement="bottom">
                     <ul class="py-1" role="none">
                         @foreach ($viewModes as $mode)

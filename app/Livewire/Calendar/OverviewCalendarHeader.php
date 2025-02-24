@@ -2,91 +2,70 @@
 
 namespace App\Livewire\Calendar;
 
+use App\Livewire\Traits\HandlesCalendar;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class OverviewCalendarHeader extends Component
 {
-    public $nameOfMonth; // name of month
-    public $currentDay, $currentMonth, $currentYear; // current day, month, year
-    public $changeMonth, $changeYear; // month and year to display
-    public $daysInMonth, $firstDayOfMonth; // number of days in month, first day of month 
+    use HandlesCalendar;
 
-    public function mount()
+    public function mount(): void
     {
-        $now = Carbon::now();
-        $this->currentDay = $now->day;
-        $this->currentMonth = $now->month;
-        $this->currentYear = $now->year;
+        $this->initializeCalendar();
+        $this->calculateMonthData();
+    }
 
-        $savedData = Session::get('calendar_data');
-
-        if ($savedData) {
-            $this->changeMonth = $savedData['changeMonth'];
-            $this->changeYear = $savedData['changeYear'];
-        } else {
-            $this->changeMonth = $this->currentMonth;
-            $this->changeYear = $this->currentYear;
-        }
+    #[On('miniCalendarUpdated')]
+    #[On('monthCalendarUpdated')]
+    public function updateDate($data): void
+    {
+        $this->changeMonth = $data['changeMonth'];
+        $this->changeYear = $data['changeYear'];
+        $this->nameOfMonth = $data['nameOfMonth'];
 
         $this->calculateMonthData();
     }
 
-    #[On('dateUpdated')]
-    public function updateDate()
-    {
-        $savedData = Session::get('calendar_data');
-
-        if ($savedData) {
-            $this->changeMonth = $savedData['changeMonth'];
-            $this->changeYear = $savedData['changeYear'];
-            $this->nameOfMonth = $savedData['nameOfMonth'];
-        }
-    }
-
-    public function calculateMonthData()
+    public function calculateMonthData(): void
     {
         $date = Carbon::create($this->changeYear, $this->changeMonth, 1);
         $this->daysInMonth = $date->daysInMonth;
         $this->firstDayOfMonth = $date->dayOfWeek;
         $this->nameOfMonth = $date->format('F Y');
-
-        $this->saveToSession();
-        $this->dispatch('dateUpdated');
     }
 
-    private function saveToSession()
+    public function changeMonth($direction): void
     {
-        Session::put('calendar_data', [
+        $this->changeMonth += $direction;
+
+        if ($this->changeMonth < 1) {
+            $this->changeMonth = 12;
+            $this->changeYear--;
+        } elseif ($this->changeMonth > 12) {
+            $this->changeMonth = 1;
+            $this->changeYear++;
+        }
+        $this->calculateMonthData();
+        $this->dispatch('calendarUpdated', [
             'changeMonth' => $this->changeMonth,
             'changeYear' => $this->changeYear,
             'nameOfMonth' => $this->nameOfMonth,
         ]);
     }
 
-    public function previousMonth()
+    public function previousMonth(): void
     {
-        $this->changeMonth--;
-        if ($this->changeMonth < 1) {
-            $this->changeMonth = 12;
-            $this->changeYear--;
-        }
-        $this->calculateMonthData();
+        $this->changeMonth(-1);
     }
 
-    public function nextMonth()
+    public function nextMonth(): void
     {
-        $this->changeMonth++;
-        if ($this->changeMonth > 12) {
-            $this->changeMonth = 1;
-            $this->changeYear++;
-        }
-        $this->calculateMonthData();
+        $this->changeMonth(1);
     }
 
-    public function gotoToday()
+    public function gotoToday(): void
     {
         $this->redirect('calendar', navigate: true);
     }

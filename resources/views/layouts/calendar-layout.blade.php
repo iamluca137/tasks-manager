@@ -7,7 +7,7 @@
     <title>Tasks Manager</title>
     <meta name="description" content="Task Manager">
     <meta name="author" content="iamluca137">
-    <meta name="robots" content="noindex, nofollow"> 
+    <meta name="robots" content="noindex, nofollow">
     <link rel="icon" href="{{ asset('assets/images/logo.png') }}">
     {{-- CSRF Token --}}
     {{-- Fonts (Red Rose) --}}
@@ -25,8 +25,8 @@
     @livewireStyles
 </head>
 
-<body class="red-rose"> 
-    <div class="antialiased bg-gray-50 dark:bg-gray-900">
+<body class="red-rose">
+    <div class="antialiased bg-gray-50 ">
         {{-- Header --}}
         @livewire('partials.calendar.header')
         {{-- Sidebar --}}

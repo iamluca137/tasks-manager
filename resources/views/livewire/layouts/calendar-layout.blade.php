@@ -21,22 +21,23 @@
     {{-- Style CSS --}}
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
+    @stack('styles')
     @livewireStyles
 </head>
 
 <body class="red-rose">
-    <div class="antialiased bg-gray-50 dark:bg-gray-900">
-        {{-- Header --}}
-        @livewire('partials.calendar.header')
-        {{-- Sidebar --}}
-        @livewire('partials.calendar.sidebar')
+<div class="antialiased bg-gray-50 ">
+    {{-- Header --}}
+    @livewire('partials.calendar.header')
+    {{-- Sidebar --}}
+    @livewire('partials.calendar.sidebar')
 
-        <main class="md:ml-64 h-auto pt-16 bg-white rounded-lg">
-            {{ $slot }}
-        </main>
-    </div>
-    @livewireScripts
+    <main class="md:ml-64 h-screen pt-16 bg-white rounded-lg">
+        {{ $slot }}
+    </main>
+</div>
+@livewireScripts
+@stack('scripts')
 </body>
 
 </html>
